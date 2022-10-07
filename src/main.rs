@@ -8,20 +8,22 @@ use console::Term;
 
 
 fn main() {
-// println!("{}[2J", 27 as char);
+println!("{}[2J", 27 as char);
 
-let stdout = Term::buffered_stdout();
-'test_loop: loop{
-    if let Ok(character) = stdout.read_char() {
-        match character {
-            'w' => println!("w"),
-            'a' => println!("a"),
-            's' => println!("s"),
-            'd' => println!("d"),
-            _ => break 'test_loop
-        }
-    }
-}
+
+// ToDo: implement key inputs so user doesnt have to press enter after every word
+// let stdout = Term::buffered_stdout();
+// 'test_loop: loop{
+//     if let Ok(character) = stdout.read_char() {
+//         match character {
+//             'w' => println!("w"),
+//             'a' => println!("a"),
+//             's' => println!("s"),
+//             'd' => println!("d"),
+//             _ => break 'test_loop
+//         }
+//     }
+// }
 
 
 // shouldnt have to hit enter after every word!
