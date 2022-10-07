@@ -473,7 +473,13 @@ fn type_race(choice: Vec<String>, amount: usize) {
         let c = i + 1;
         println!("{}{}{}", c.truecolor(44, 200, 100), ("/").truecolor(44, 200, 100), amount.truecolor(44, 200, 100));
         hp_bar(hp);
-        println!("\n{} {} {} {}",  choice[i].truecolor(100, 200, 44), choice[i+1].truecolor(44, 100, 44), choice[i+2].truecolor(44, 44, 100), choice[i+3].truecolor(100, 44, 44));
+        println!(
+            "\n{}\n{}\n{}\n{}",  
+            choice[i+3].truecolor(100, 44, 44),
+            choice[i+2].truecolor(44, 44, 100), 
+            choice[i+1].truecolor(44, 100, 44), 
+            choice[i].truecolor(100, 200, 44), 
+        );
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).expect("cant");
         match input.trim() {
