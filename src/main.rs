@@ -1,48 +1,32 @@
-
-use rand::thread_rng;
-use rand::seq::SliceRandom;
-use owo_colors::OwoColorize;
-use std::{time::{Instant, Duration}, io::Read};
-use std::io;
 use console::Term;
-
+use owo_colors::OwoColorize;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
+use std::io;
+use std::{
+    io::Read,
+    time::{Duration, Instant},
+};
 
 fn main() {
-println!("{}[2J", 27 as char);
+    println!("{}[2J", 27 as char);
 
+    // shouldnt have to hit enter after every word!
 
-// ToDo: implement key inputs so user doesnt have to press enter after every word
-// let stdout = Term::buffered_stdout();
-// 'test_loop: loop{
-//     if let Ok(character) = stdout.read_char() {
-//         match character {
-//             'w' => println!("w"),
-//             'a' => println!("a"),
-//             's' => println!("s"),
-//             'd' => println!("d"),
-//             _ => break 'test_loop
-//         }
-//     }
-// }
-
-
-// shouldnt have to hit enter after every word!
-
-//vision:
-// 4-5 words to type on screen
-// current word is highlighted/different color
-// that way you can look ahead
-// enter a word and they will all shift to the left
-// enter word wrong and it will appear as red so you know you got it wrong 
-
+    //vision:
+    // 4-5 words to type on screen
+    // current word is highlighted/different color
+    // that way you can look ahead
+    // enter a word and they will all shift to the left
+    // enter word wrong and it will appear as red so you know you got it wrong
 
     println!("\n\n{}", ("turbotype").truecolor(100, 200, 44));
     // println!("{}", ("type the sentences exactly as they appear on the screen").truecolor(100, 200, 44).dimmed());
 
-//    println!("{}", ("(100, 200, 44)").truecolor(100, 200, 44));
- //   println!("{}", ("(44, 200, 100)").truecolor(44, 200, 100));
-  //  println!("{}", ("(44, 100, 200)").truecolor(44, 100, 200));
-   // println!("{}", ("(100, 44, 200)").truecolor(100, 44, 200));
+    //    println!("{}", ("(100, 200, 44)").truecolor(100, 200, 44));
+    //   println!("{}", ("(44, 200, 100)").truecolor(44, 200, 100));
+    //  println!("{}", ("(44, 100, 200)").truecolor(44, 100, 200));
+    // println!("{}", ("(100, 44, 200)").truecolor(100, 44, 200));
     //println!("{}", ("(200, 44, 100)").truecolor(200, 44, 100));
     //println!("{}", ("(200, 100, 44)").truecolor(200, 100, 44));
 
@@ -51,12 +35,12 @@ println!("{}[2J", 27 as char);
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).expect("cant");
         match input.trim() {
-            _ => break
+            _ => break,
         }
     }
-   
-//   choose how many words to type 
-// choose what topic to type for sentences
+
+    //   choose how many words to type
+    // choose what topic to type for sentences
 
     let mut sentence = vec![
         String::from("The industrial revolution and its consequences have been a disaster for the hum"),
@@ -407,7 +391,10 @@ println!("{}[2J", 27 as char);
     let mut num = String::new();
     let mut amount: usize = 0;
     println!("{}[2J", 27 as char);
-    println!("{}", ("sentences or words❔").truecolor(200, 44, 100));
+    println!(
+        "{}",
+        ("sentences, words, or some other third thing?").truecolor(200, 44, 100)
+    );
     loop {
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).expect("cant");
@@ -415,24 +402,30 @@ println!("{}[2J", 27 as char);
             "words" => {
                 println!("{}[2J", 27 as char);
                 println!("{}", ("How many words?").truecolor(100, 200, 44));
-                choice = word.to_owned(); 
+                choice = word.to_owned();
                 io::stdin().read_line(&mut num).unwrap();
-                
+
                 match num.trim().parse::<usize>().unwrap() {
-                    x if x <= 250 => {amount = x}
-                    _ => ()
+                    x if x <= 250 => amount = x,
+                    _ => (),
                 }
-                break
+                break;
             }
             "sentences" => {
-                choice = sentence.to_owned(); 
-                break
+                choice = sentence.to_owned();
+                break;
             }
-            _ => ()
-        }   
-        println!("{}", ("choose an option to continue").truecolor(44, 100, 200).dimmed())
+            "x" => experimental(&word, amount),
+            _ => (),
+        }
+        println!(
+            "{}",
+            ("choose an option to continue")
+                .truecolor(44, 100, 200)
+                .dimmed()
+        )
     }
-    
+
     // timer begins
     let start = Instant::now();
     // game logic
@@ -440,16 +433,46 @@ println!("{}[2J", 27 as char);
     // time ends
     let duration = start.elapsed();
     // show time
-    println!("{} {:?}", ("time").truecolor(100, 44, 200), duration.truecolor(200, 44, 100));
+    println!(
+        "{} {:?}",
+        ("time").truecolor(200, 100, 44),
+        duration.truecolor(100, 200, 44)
+    );
 }
 
 fn hp_bar(hp: i32) {
     match hp {
-        3 => {print!("💖💖💖")}
-        2 => {print!("💖💖🖤")}
-        1 => {print!("💖🖤🖤")}
+        3 => {
+            print!("💖💖💖")
+        }
+        2 => {
+            print!("💖💖🖤")
+        }
+        1 => {
+            print!("💖🖤🖤")
+        }
         0 => {}
         _ => {}
+    }
+}
+
+fn graded_score(score: f64, amount: f64) -> String {
+    let grade = score / amount * 100.0;
+    match grade as i32 {
+        100 => String::from("💯"),
+        g if 97 <= g && g < 100 => String::from("A+"),
+        g if 93 <= g && g < 97 => String::from("A"),
+        g if 90 <= g && g < 93 => String::from("A-"),
+        g if 87 <= g && g < 90 => String::from("B+"),
+        g if 83 <= g && g < 87 => String::from("B"),
+        g if 80 <= g && g < 83 => String::from("B-"),
+        g if 77 <= g && g < 80 => String::from("C+"),
+        g if 73 <= g && g < 77 => String::from("C"),
+        g if 70 <= g && g < 73 => String::from("C-"),
+        g if 67 <= g && g < 70 => String::from("C+"),
+        g if 63 <= g && g < 67 => String::from("C"),
+        g if 60 <= g && g < 63 => String::from("C-"),
+        _ => String::from("F"),
     }
 }
 
@@ -457,29 +480,39 @@ fn type_race(choice: Vec<String>, amount: usize) {
     let mut score = 0;
     let mut hp = 3;
     let mut i = 0;
-    
+
     loop {
+        // check to see if player is out of lives
         match hp {
             0 => {
-                println!("{}[2J", 27 as char); 
+                println!("{}[2J", 27 as char);
                 println!("🖤🖤🖤");
-                println!("{}", ("u lose").truecolor(100, 44, 200)); 
+                println!("{}", ("u lose").truecolor(100, 44, 200));
+                println!(
+                    "{} {}",
+                    ("score").truecolor(200, 100, 44),
+                    score.truecolor(100, 200, 44)
+                );
+                println!(
+                    "{} {}",
+                    ("grade").truecolor(200, 44, 100),
+                    graded_score(score as f64, amount as f64).truecolor(200, 100, 44)
+                );
                 break;
             }
-            
+
             _ => {}
         }
         println!("{}[2J", 27 as char);
         let c = i + 1;
-        println!("{}{}{}", c.truecolor(44, 200, 100), ("/").truecolor(44, 200, 100), amount.truecolor(44, 200, 100));
-        hp_bar(hp);
         println!(
-            "\n{}\n{}\n{}\n{}",  
-            choice[i+3].truecolor(100, 44, 44),
-            choice[i+2].truecolor(44, 44, 100), 
-            choice[i+1].truecolor(44, 100, 44), 
-            choice[i].truecolor(100, 200, 44), 
+            "{}{}{}",
+            c.truecolor(44, 200, 100),
+            ("/").truecolor(44, 200, 100),
+            amount.truecolor(44, 200, 100)
         );
+        hp_bar(hp);
+        println!("\n{}", choice[i].truecolor(100, 200, 44));
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).expect("cant");
         match input.trim() {
@@ -492,15 +525,71 @@ fn type_race(choice: Vec<String>, amount: usize) {
                 i += 1
             }
         }
-        
+
         match i {
             i if i == amount => {
                 println!("{}[2J", 27 as char);
                 println!("{}", ("finished!").truecolor(44, 100, 200));
-                println!("{}{}", ("score ").truecolor(200, 100, 44), score.truecolor(100, 200, 44));
+                println!(
+                    "{}{}",
+                    ("score ").truecolor(200, 100, 44),
+                    score.truecolor(100, 200, 44)
+                );
+                println!(
+                    "{} {}",
+                    ("grade").truecolor(100, 44, 200),
+                    graded_score(score as f64, amount as f64).truecolor(200, 100, 44)
+                );
                 break;
             }
             _ => {}
         }
     }
 }
+
+fn experimental(option: &Vec<String>, amount: usize) {
+    let mut score = 0;
+    let mut hp = 5;
+    // current word
+    let mut i: usize = 0;
+    // current letter
+    let mut c: usize = 0;
+    // current word's length
+    let mut z = option[i].chars().count();
+
+    let key = Term::buffered_stdout();
+    'test_loop: loop {
+    if c == z {
+        score += 0;
+        i += 1;
+        c = 0
+    }
+    // println!("{}[2J", 27 as char);
+    for l in option[i].chars() {
+        match l {
+            l if l == option[i].chars().nth(c).unwrap() => {
+                print!("{}", l.truecolor(100, 200, 44))
+            }
+            _ => {
+                print!("{}", l.green().dimmed())
+            }
+        }
+    }
+        println!("");
+        
+        if let Ok(character) = key.read_char() {
+            match character {
+                k if k == option[i].chars().nth(c).unwrap() => {
+                    c += 1;
+                }
+                _ => {
+                    score -= 0;
+                    
+                }
+            }
+        }
+    }
+}
+
+// print each word char by cahr
+// print each char if typed correctly it is highlighted, else red
