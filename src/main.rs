@@ -441,17 +441,20 @@ fn main() {
 }
 
 fn hp_bar(hp: i32) {
+    let heart = String::from("💖");
+    let broken_heart = String::from("❤️‍🩹");
     match hp {
-        3 => {
-            print!("💖💖💖")
+        x if x > 3 => {
+            for h in 0..hp {
+                print!("{}", heart)
+            }
         }
-        2 => {
-            print!("💖💖🖤")
+        x if x <= 3 => {
+            for h in 0..hp {
+                print!("{}", broken_heart)
+            }
         }
-        1 => {
-            print!("💖🖤🖤")
-        }
-        0 => {}
+        
         _ => {}
     }
 }
@@ -549,22 +552,40 @@ fn type_race(choice: Vec<String>, amount: usize) {
 
 fn experimental(option: &Vec<String>, amount: usize) {
     let mut score = 0;
-    let mut hp = 5;
+    let mut hp = 10;
     // current word
     let mut i: usize = 0;
     // current letter
     let mut c: usize = 0;
     // current word's length
-    let mut z = option[i].chars().count();
+    
 
     let key = Term::buffered_stdout();
     'test_loop: loop {
-    if c == z {
-        score += 0;
-        i += 1;
-        c = 0
-    }
-    // println!("{}[2J", 27 as char);
+    let mut z = option[i].chars().count();
+    match hp {
+            0 => {
+                println!("{}[2J", 27 as char);
+                println!("🖤🖤🖤🖤🖤");
+                println!("{}", ("u lose").truecolor(100, 44, 200));
+                println!(
+                    "{} {}",
+                    ("score").truecolor(200, 100, 44),
+                    score.truecolor(100, 200, 44)
+                );
+                println!(
+                    "{} {}",
+                    ("grade").truecolor(200, 44, 100),
+                    graded_score(score as f64, amount as f64).truecolor(200, 100, 44)
+                );
+                break;
+            }
+
+            _ => {}
+        }
+    println!("{}[2J", 27 as char);
+    hp_bar(hp);
+    println!("");
     for l in option[i].chars() {
         match l {
             l if l == option[i].chars().nth(c).unwrap() => {
@@ -583,11 +604,17 @@ fn experimental(option: &Vec<String>, amount: usize) {
                     c += 1;
                 }
                 _ => {
-                    score -= 0;
+                    score -= 1;
+                    hp -= 1;
                     
                 }
             }
         }
+        if c == z {
+        score += 1;
+        i += 1;
+        c = 0
+    }
     }
 }
 
