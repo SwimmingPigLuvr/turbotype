@@ -7,4 +7,4 @@ from directory to run program,
 or!
 
 "cargo install --path ." 
-to type "turbo" from any directory.
+to run from any directory, w/ command "turbo"
