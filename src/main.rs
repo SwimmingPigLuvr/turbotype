@@ -585,14 +585,20 @@ fn experimental(option: &Vec<String>, amount: usize) {
         }
         // clear screen
         println!("{}[2J", 27 as char);
-        // print hp bar
+        // print hp ba
         hp_bar(hp);
-        println!("");
+        println!("{}", option[i].on_truecolor(100, 200, 44));
         for l in option[i].chars() {
             if let Ok(character) = key.read_char() {
-                match character {
-                    k if k == option[i].chars().nth(c).unwrap() => {
+                match (character, l) {
+                    (k, l) if k == option[i].chars().nth(c).unwrap() => {
+                        print!("{}", l.truecolor(100, 200, 44));
+        println!("");
                         c += 1;
+                    }
+                    (k, l) => if k != option[i].chars().nth(c).unwrap() {
+                        print!("{}", l.truecolor(200, 100, 44));
+        println!("");
                     }
                     _ => {
                         score -= 1;
@@ -600,15 +606,15 @@ fn experimental(option: &Vec<String>, amount: usize) {
                     }
                 }
             }
-            match l {
-                l if l == option[i].chars().nth(c).unwrap() => {
-                    print!("{}", l.truecolor(100, 200, 44))
-                }
-                _ => {
-                    println!("");
-                    print!("{}", l.green().dimmed())
-                }
-            }
+            // match l {
+            //     l if l == option[i].chars().nth(c).unwrap() => {
+            //         print!("{}", l.truecolor(100, 200, 44))
+            //     }
+            //     _ => {
+            //         println!("");
+            //         print!("{}", l.green().dimmed())
+            //     }
+            // }
         }
         println!("");
 
