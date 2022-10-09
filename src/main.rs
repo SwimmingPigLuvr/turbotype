@@ -454,7 +454,7 @@ fn hp_bar(hp: i32) {
                 print!("{}", broken_heart)
             }
         }
-        
+
         _ => {}
     }
 }
@@ -557,13 +557,13 @@ fn experimental(option: &Vec<String>, amount: usize) {
     let mut i: usize = 0;
     // current letter
     let mut c: usize = 0;
-    // current word's length
-    
-
+    // key input
     let key = Term::buffered_stdout();
     'test_loop: loop {
-    let mut z = option[i].chars().count();
-    match hp {
+        // current word's length
+        let mut z = option[i].chars().count();
+        // check hp lvls
+        match hp {
             0 => {
                 println!("{}[2J", 27 as char);
                 println!("🖤🖤🖤🖤🖤");
@@ -583,38 +583,40 @@ fn experimental(option: &Vec<String>, amount: usize) {
 
             _ => {}
         }
-    println!("{}[2J", 27 as char);
-    hp_bar(hp);
-    println!("");
-    for l in option[i].chars() {
-        match l {
-            l if l == option[i].chars().nth(c).unwrap() => {
-                print!("{}", l.truecolor(100, 200, 44))
-            }
-            _ => {
-                print!("{}", l.green().dimmed())
-            }
-        }
-    }
+        // clear screen
+        println!("{}[2J", 27 as char);
+        // print hp bar
+        hp_bar(hp);
         println!("");
-        
-        if let Ok(character) = key.read_char() {
-            match character {
-                k if k == option[i].chars().nth(c).unwrap() => {
-                    c += 1;
+        for l in option[i].chars() {
+            if let Ok(character) = key.read_char() {
+                match character {
+                    k if k == option[i].chars().nth(c).unwrap() => {
+                        c += 1;
+                    }
+                    _ => {
+                        score -= 1;
+                        hp -= 1;
+                    }
+                }
+            }
+            match l {
+                l if l == option[i].chars().nth(c).unwrap() => {
+                    print!("{}", l.truecolor(100, 200, 44))
                 }
                 _ => {
-                    score -= 1;
-                    hp -= 1;
-                    
+                    println!("");
+                    print!("{}", l.green().dimmed())
                 }
             }
         }
+        println!("");
+
         if c == z {
-        score += 1;
-        i += 1;
-        c = 0
-    }
+            score += 1;
+            i += 1;
+            c = 0
+        }
     }
 }
 
